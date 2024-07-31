@@ -7,10 +7,20 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
       POSTGRES_DB: leads_db
-    ports:
-      - "5432:5432"
     volumes:
       - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  test:
+    build: .
+    command: pytest --maxfail=1 --disable-warnings -q
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app  # Agrega PYTHONPATH aquí
 
   api:
     build: .
